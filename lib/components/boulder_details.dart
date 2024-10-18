@@ -1,4 +1,6 @@
+import 'package:breizh_blok_mobile/components/bb_boulder_success_toggle.dart';
 import 'package:breizh_blok_mobile/components/bb_map_launcher_button.dart';
+import 'package:breizh_blok_mobile/components/bb_restricted_clickable_widget.dart';
 import 'package:breizh_blok_mobile/components/boulder_details_associated.dart';
 import 'package:breizh_blok_mobile/components/boulder_details_line_boulders.dart';
 import 'package:breizh_blok_mobile/components/boulder_item_map.dart';
@@ -32,6 +34,15 @@ class BoulderDetails extends StatelessWidget {
           Stack(
             children: [
               BoulderDetailsLineBoulders(lineBoulders: boulder.lineBoulders),
+              const Positioned(
+                top: 10,
+                right: 10,
+                child: BbRestrictedClickableWidget(
+                  child: BbBoulderSuccessToggle(
+                    size: 50,
+                  ),
+                ),
+              ),
             ],
           ),
           if (description != null)

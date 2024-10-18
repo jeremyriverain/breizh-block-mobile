@@ -10,6 +10,8 @@ import 'package:breizh_blok_mobile/blocs/map_bloc.dart';
 import 'package:breizh_blok_mobile/blocs/map_permission_bloc.dart';
 import 'package:breizh_blok_mobile/blocs/tab_bloc.dart';
 import 'package:breizh_blok_mobile/blocs/terms_of_use_bloc.dart';
+import 'package:breizh_blok_mobile/blocs/vibrator_bloc.dart';
+import 'package:breizh_blok_mobile/components/bb_restricted_view.dart';
 import 'package:breizh_blok_mobile/database/app_database.dart';
 import 'package:breizh_blok_mobile/image_boulder_cache.dart';
 import 'package:breizh_blok_mobile/location_provider.dart';
@@ -23,12 +25,16 @@ import 'package:breizh_blok_mobile/repositories/grade_repository.dart';
 import 'package:breizh_blok_mobile/repositories/municipality_repository.dart';
 import 'package:breizh_blok_mobile/share_content_service.dart';
 import 'package:breizh_blok_mobile/share_content_service_interface.dart';
+import 'package:breizh_blok_mobile/vibrator_service.dart';
 import 'package:breizh_blok_mobile/views/boulder_area_details_view.dart';
 import 'package:breizh_blok_mobile/views/boulder_details_view.dart';
 import 'package:breizh_blok_mobile/views/download_view.dart';
 import 'package:breizh_blok_mobile/views/home_view.dart';
 import 'package:breizh_blok_mobile/views/municipality_details_view.dart';
 import 'package:breizh_blok_mobile/views/profile_view.dart';
+import 'package:breizh_blok_mobile/views/session_details_view.dart';
+import 'package:breizh_blok_mobile/views/sessions_view.dart';
+import 'package:breizh_blok_mobile/views/stats_view.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart' hide HttpClientProvider;
@@ -92,6 +98,9 @@ Future<void> main({
   );
 
   final appShareContentService = shareContentService ?? ShareContentService();
+  final vibratorCapabilityBloc = VibratorBloc(
+    vibratorService: VibratorService(),
+  );
 
   await SentryFlutter.init(
     (options) {
@@ -162,6 +171,9 @@ Future<void> main({
             BlocProvider<MapPermissionBloc>(
               create: (BuildContext context) =>
                   mapPermissionBloc ?? MapPermissionBloc(),
+            ),
+            BlocProvider<VibratorBloc>(
+              create: (BuildContext context) => vibratorCapabilityBloc,
             ),
           ],
           child: LocationProvider(
@@ -275,6 +287,42 @@ class MyApp extends StatelessWidget {
               create: (context) => RequestStrategy(),
               child: DownloadView(
                 database: database,
+              ),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/stats',
+          name: 'stats',
+          builder: (context, state) {
+            return BbRestrictedView(
+              child: RepositoryProvider(
+                create: (context) => RequestStrategy(),
+                child: const StatsView(),
+              ),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/sessions',
+          name: 'sessions',
+          builder: (context, state) {
+            return BbRestrictedView(
+              child: RepositoryProvider(
+                create: (context) => RequestStrategy(),
+                child: SessionsView(),
+              ),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/sessions/:id',
+          name: 'session_details',
+          builder: (context, state) {
+            return BbRestrictedView(
+              child: RepositoryProvider(
+                create: (context) => RequestStrategy(),
+                child: SessionDetailsView(id: state.pathParameters['id']!),
               ),
             );
           },

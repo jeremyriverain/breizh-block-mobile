@@ -1,5 +1,7 @@
+import 'package:breizh_blok_mobile/components/bb_boulder_success_toggle.dart';
 import 'package:breizh_blok_mobile/components/bb_boulder_tile_image.dart';
 import 'package:breizh_blok_mobile/components/bb_boulder_tile_title.dart';
+import 'package:breizh_blok_mobile/components/bb_restricted_clickable_widget.dart';
 import 'package:breizh_blok_mobile/models/boulder.dart';
 import 'package:breizh_blok_mobile/models/request_strategy.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +46,13 @@ class BbBoulderListBuilderTile extends StatelessWidget {
                 Stack(
                   children: [
                     BbBoulderTileImage(boulder: boulder),
+                    const Positioned(
+                      bottom: 5,
+                      left: 5,
+                      child: BbRestrictedClickableWidget(
+                        child: BbBoulderSuccessToggle(),
+                      ),
+                    ),
                   ],
                 ),
                 Expanded(
